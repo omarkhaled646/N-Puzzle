@@ -26,7 +26,7 @@ namespace N_Puzzle
 
 
 
-            Node parentNode = new Node(solvable8, 3);
+            Node parentNode = new Node(solvable1, 3);
 
             /*            int[,] arr = { { 1, 2, 7, 3 },
                                        { 5, 6, 0, 4 },
