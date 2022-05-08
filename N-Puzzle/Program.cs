@@ -12,6 +12,9 @@ namespace N_Puzzle
     {
         static void Main(string[] args)
         {
+
+            Queue<Node> finalAnswer = new Queue<Node>();
+
             int[,] notSolvable = { { 1, 2, 3 },
                            { 4, 5, 6 },
                            { 8, 7, 0 } };
@@ -24,16 +27,18 @@ namespace N_Puzzle
                            { 5, 6, 3 },
                            { 4, 7, 8 } };
 
+            int[,] solvable910 = { { 2, 3, 6 },
+                                   { 1, 4, 8 },
+                                   { 7, 5, 0 } };
 
 
-            Node parentNode = new Node(solvable1, 3);
+            int[,] arr4 = { { 5, 3, 9, 11 },
+                            { 7, 10, 15, 4 },
+                            { 2, 14, 12, 1 },
+                            { 6, 13, 8, 0} };
 
-            /*            int[,] arr = { { 1, 2, 7, 3 },
-                                       { 5, 6, 0, 4 },
-                                       { 9, 10, 11, 8 },
-                                       { 13, 14, 15, 12} };
+            Node parentNode = new Node(solvable910, 3);
 
-                        Node parentNode = new Node(arr, 4);*/
 
             if (!parentNode.isSolvable())
                 Console.WriteLine("Not Solvable");
@@ -41,13 +46,23 @@ namespace N_Puzzle
             {
                 Console.WriteLine("Solvable");
                 Console.WriteLine("Number of moves = " + aStar(parentNode));
+                Console.WriteLine("-------------");
+
+                int stpCntr = 0;
+                while (finalAnswer.Count != 0)
+                {
+                    Console.WriteLine("Step " + stpCntr++);
+                    finalAnswer.Dequeue().printState();
+                    Console.WriteLine("-------------");
+                }
             }
 
             // aStar function goes through all possible combinations and returns the number of steps
 
             int aStar(Node parent)
             {
-                parent.printState();
+                finalAnswer.Enqueue(parent);
+                //parent.printState();
                 List<int[,]> finished = new List<int[,]>();
                 SimplePriorityQueue<Node> nodes = new SimplePriorityQueue<Node>();
                 Node current, child;
@@ -74,7 +89,8 @@ namespace N_Puzzle
 
                 while (nodes.Count() != 0)
                 {
-                    current.printState();
+                    finalAnswer.Enqueue(current);
+                    //current.printState();
 
                     // Base case (Finish state)
                     if (current.isFinalState()) return current.g;

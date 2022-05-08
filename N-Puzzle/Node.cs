@@ -38,7 +38,7 @@ namespace N_Puzzle
                 }
             }
             g = 0;
-            h = getHamming(this);
+            h = getDistance(this, 'H');
             f = g + h;
             parent = null;
         }
@@ -54,8 +54,8 @@ namespace N_Puzzle
 
         public int getFinal()
         {
-            h = getHamming(this);
-            return g+h;
+            h = getDistance(this, 'H');
+            return g +h;
         }
 
         public bool isFinalState()
@@ -95,7 +95,7 @@ namespace N_Puzzle
             child.grid[x - 1, y] = 0;
             child.x = x - 1;
             child.y = y;
-            child.h = getHamming(child);
+            h = getDistance(this, 'H');
             child.f = child.h + child.g;
             return child;
         }
@@ -109,7 +109,7 @@ namespace N_Puzzle
             child.grid[x + 1, y] = 0;
             child.x = x + 1;
             child.y = y;
-            child.h = getHamming(child);
+            h = getDistance(this, 'H');
             child.f = child.h + child.g;
             return child;
         }
@@ -123,7 +123,7 @@ namespace N_Puzzle
             child.grid[x, y + 1] = 0;
             child.x = x;
             child.y = y + 1;
-            child.h = getHamming(child);
+            h = getDistance(this, 'H');
             child.f = child.h + child.g;
             return child;
         }
@@ -137,30 +137,66 @@ namespace N_Puzzle
             child.grid[x, y - 1] = 0;
             child.x = x;
             child.y = y - 1;
-            child.h = getHamming(child);
+            h = getDistance(this, 'H');
             child.f = child.h + child.g;
             return child;
         }
 
-        public int getHamming(Node node)
+        public int getDistance(Node node, char choice)
         {
-
-            int h = 0, count = 1;
-            for (int row = 0; row < size; row++)
+            if (choice == 'M' || choice == 'm')
             {
-                for (int col = 0; col < size; col++)
+                int c = 1;
+                int[,] finalState = new int[size, size];
+                for (int i = 0; i < size; i++)
+                    for (int j = 0; j < size; j++)
+                        finalState[i, j] = c++;
+
+                finalState[size - 1, size - 1] = 0;
+
+                int m = 0, newX = 0, newY = 0;
+                for (int row = 0; row < size; row++)
                 {
-                    if (grid[row, col] != 0)
+                    for (int col = 0; col < size; col++)
                     {
-                        if (grid[row, col] != count)
-                            h++;
+                        // Now current num is node.grid[row,col]
+                        // Search for its equivalent in finalState through ii, jj
+
+                        for (int ii = 0; ii < size; ii++)
+                        {
+                            for (int jj = 0; jj < size; jj++)
+                            {
+                                if (node.grid[row, col] == finalState[ii, jj])
+                                {
+                                    newX = ii;
+                                    newY = jj;
+                                }
+                            }
+                        }
+                        m += Math.Abs(newX - row) + Math.Abs(newY - col);
                     }
-                    count++;
-                    count %= size * size;
                 }
+                return m;
+            } else
+            {
+                int h = 0, count = 1;
+                for (int row = 0; row < size; row++)
+                {
+                    for (int col = 0; col < size; col++)
+                    {
+                        if (node.grid[row, col] != 0)
+                        {
+                            if (node.grid[row, col] != count)
+                                h++;
+                        }
+                        count++;
+                        count %= size * size;
+                    }
+                }
+                return h;
             }
-            return h;
         }
+
 
         public void printState()
         {
@@ -176,7 +212,6 @@ namespace N_Puzzle
                 }
                 Console.Write('\n');
             }
-            Console.WriteLine("----------------");
         }
 
         public Boolean isSolvable()
