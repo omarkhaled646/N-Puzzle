@@ -5,3 +5,14 @@ E:\Fcis\3rd Year Fcis\6th Semester\Algorithms\Project\N Puzzle\N-Puzzle\N-Puzzle
 E:\Fcis\3rd Year Fcis\6th Semester\Algorithms\Project\N Puzzle\N-Puzzle\N-Puzzle\obj\Debug\N-Puzzle.csproj.CoreCompileInputs.cache
 E:\Fcis\3rd Year Fcis\6th Semester\Algorithms\Project\N Puzzle\N-Puzzle\N-Puzzle\obj\Debug\N-Puzzle.exe
 E:\Fcis\3rd Year Fcis\6th Semester\Algorithms\Project\N Puzzle\N-Puzzle\N-Puzzle\obj\Debug\N-Puzzle.pdb
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\bin\Debug\N-Puzzle.exe.config
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\bin\Debug\N-Puzzle.exe
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\bin\Debug\N-Puzzle.pdb
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\bin\Debug\PriorityQueue.dll
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\bin\Debug\PriorityQueue.pdb
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\bin\Debug\PriorityQueue.xml
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\obj\Debug\N-Puzzle.csprojAssemblyReference.cache
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\obj\Debug\N-Puzzle.csproj.CoreCompileInputs.cache
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\obj\Debug\N-Puzzle.csproj.CopyComplete
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\obj\Debug\N-Puzzle.exe
+D:\Kolleya\Kolleya 6th Term\Algorithms\PROJ\N-Puzzle\N-Puzzle\obj\Debug\N-Puzzle.pdb

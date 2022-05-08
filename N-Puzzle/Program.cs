@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using Priority_Queue;
 
 namespace N_Puzzle
 {
@@ -11,73 +12,103 @@ namespace N_Puzzle
     {
         static void Main(string[] args)
         {
-            FileStream testsFile;
-            int cases;
-            StreamReader reader;
-            string line;
-            int wrongAnswers;
-            TextReader origConsole = Console.In;
-            Console.WriteLine("N-Puzzle:\n[1] Sample test cases\n[2] Complete testing\n");
-            Console.Write("\nEnter your choice [1-2]: ");
-            char choice = (char)Console.ReadLine()[0];
-            switch(choice)
+            int[,] notSolvable = { { 1, 2, 3 },
+                           { 4, 5, 6 },
+                           { 8, 7, 0 } };
+
+            int[,] solvable1 = { { 1, 2, 3 },
+                           { 4, 5, 6 },
+                           { 7, 0, 8 } };
+
+            int[,] solvable8 = { { 0, 1, 2 },
+                           { 5, 6, 3 },
+                           { 4, 7, 8 } };
+
+
+
+            Node parentNode = new Node(solvable8, 3);
+
+            /*            int[,] arr = { { 1, 2, 7, 3 },
+                                       { 5, 6, 0, 4 },
+                                       { 9, 10, 11, 8 },
+                                       { 13, 14, 15, 12} };
+
+                        Node parentNode = new Node(arr, 4);*/
+
+            if (!parentNode.isSolvable())
+                Console.WriteLine("Not Solvable");
+            else
             {
-                case '1':
-                    #region SAMPLE CASES
-                    testsFile = new FileStream("in-out.txt", FileMode.Open, FileAccess.Read);
-                    reader = new StreamReader(testsFile);
-                    line = reader.ReadLine();
-                    cases = int.Parse(line);
-                    wrongAnswers = 0;
-                    for(int Case = 0; Case < cases; Case++)
+                Console.WriteLine("Solvable");
+                Console.WriteLine("Number of moves = " + aStar(parentNode));
+            }
+
+            // aStar function goes through all possible combinations and returns the number of steps
+
+            int aStar(Node parent)
+            {
+                parent.printState();
+                List<int[,]> finished = new List<int[,]>();
+                SimplePriorityQueue<Node> nodes = new SimplePriorityQueue<Node>();
+                Node current, child;
+
+                if (parent.isFinalState()) return 0;
+
+                // Let's go through all four options
+                if (parent.x + 1 <= Node.size - 1)
+                    nodes.Enqueue(parent.moveDown(), parent.moveDown().getFinal());
+
+                if (parent.x - 1 >= 0)
+                    nodes.Enqueue(parent.moveUp(), parent.moveUp().getFinal());
+
+                if (parent.y + 1 <= Node.size - 1)
+                    nodes.Enqueue(parent.moveRight(), parent.moveRight().getFinal());
+
+                if (parent.y - 1 >= 0)
+                    nodes.Enqueue(parent.moveLeft(), parent.moveLeft().getFinal());
+
+                // Now we are done with the parent
+                finished.Add(parent.grid);
+
+                current = nodes.First();
+
+                while (nodes.Count() != 0)
+                {
+                    current.printState();
+
+                    // Base case (Finish state)
+                    if (current.isFinalState()) return current.g;
+
+                    // We will start pushing the children so remove the parent from top
+                    nodes.Dequeue();
+
+                    // Repeat the four combinations again (beware of the states in finished)
+                    if (current.x + 1 <= Node.size - 1)
                     {
-                        line = reader.ReadLine();
-                        int size = int.Parse(line);
-                        int[,] puzzle = new int[size,size];
-                        for (int row = 0; row < size; row++)
-                        {
-                            line = reader.ReadLine();
-                            string[] temp = line.Split(' ');
-                            for (int col = 0; col < size; col++)
-                            {
-                                puzzle[row, col] = int.Parse(temp[col]);
-
-                            }
-                        }
-                        line = reader.ReadLine();
-                        int receivedAnswer = N_Puzzle.solvePuzzle(size,puzzle), expectedAnswer = int.Parse(line);
-                        if (receivedAnswer != expectedAnswer)
-                        {
-                            Console.WriteLine("wrong answer at case " + (Case + 1) + " expected answer = " + expectedAnswer + " , received answer= " + receivedAnswer);
-                            wrongAnswers++;
-                            return;
-                        }
+                        child = current.moveDown();
+                        if (!finished.Contains(child.grid)) nodes.Enqueue(child, child.getFinal());
                     }
-                    reader.Close();
-                    testsFile.Close();
-                    if (wrongAnswers == 0)
-                        Console.WriteLine("Congratulation");
-
-                    Console.WriteLine("Sample cases run successfully. you should run Complete Testing... ");
-                    Console.Write("Do you want to run Complete Testing now (y/n)? ");
-                    choice = (char)Console.Read();
-                    if (choice == 'n' || choice == 'N')
-                        break;
-                    else if (choice == 'y' || choice == 'Y')
-                        goto CompleteTest;
-                    else
+                    if (current.x - 1 >= 0)
                     {
-                        Console.WriteLine("Invalid Choice!");
-                        break;
+                        child = current.moveUp();
+                        if (!finished.Contains(child.grid)) nodes.Enqueue(child, child.getFinal());
                     }
-                    break;
-                #endregion
+                    if (current.y + 1 <= Node.size - 1)
+                    {
+                        child = current.moveRight();
+                        if (!finished.Contains(child.grid)) nodes.Enqueue(child, child.getFinal());
+                    }
+                    if (current.y - 1 >= 0)
+                    {
+                        child = current.moveLeft();
+                        if (!finished.Contains(child.grid)) nodes.Enqueue(child, child.getFinal());
+                    }
 
-                case '2':
-                    #region CompleteCases
-                    CompleteTest:
-                    break;
-                    #endregion
+                    finished.Add(current.grid);
+                    current = nodes.First();
+                }
+                // If some error happened, return 0 or -1 or anything else (number of steps)
+                return -1;
             }
 
         }
