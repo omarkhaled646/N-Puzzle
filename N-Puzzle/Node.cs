@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,95 +9,75 @@ namespace N_Puzzle
 {
     class Node
     {
-        public int[,] grid;         // Game's state
-        public int h;               // Heuristic value
-        public int g;               // Cost so far
-        public int f;               // h + g
-        public int x;               // Empty slot's X
-        public int y;               // Empty slot's Y
-        public Node parent;         // Parent (if exists)
-        public static int size;     // Size of the grid
+        public int[,] grid;       
+        public int h;            
+        public int level;            
+        public int cost;
+        public int blankRow;        
+        public int blankCol;        
+        public Node parent;         
+        public static int size;     
 
         public Node(int[,] arr, int size)
         {
             Node.size = size;
-
-            // Could've used this => grid = arr.Clone() as int[,];
-            // But wouldn't have found X and Y
-
             grid = new int[size, size];
-            for (int i = 0; i < size; i++)
+            for (int row = 0; row < size; row++)
             {
-                for (int j = 0; j < size; j++)
+                for (int col = 0; col < size; col++)
                 {
-                    grid[i, j] = arr[i, j];
-                    if (arr[i, j] == 0)
+                    grid[row, col] = arr[row, col];
+                    if (arr[row, col] == 0)
                     {
-                        x = i;
-                        y = j;
+                        blankRow = row;
+                        blankCol = col;
                     }
                 }
             }
-            g = 0;
-            h = getDistance(this, 'H');
-            f = g + h;
+            level = 0;
             parent = null;
         }
 
         public Node(Node parent)
         {
             grid = parent.grid.Clone() as int[,];
-            g = parent.g + 1;
             this.parent = parent;
-            x = parent.x;
-            y = parent.y;
+            level = parent.level + 1;
+            blankRow = parent.blankRow;
+            blankCol = parent.blankCol;
         }
 
-        public int getFinal()
+        public int computeCost(Node node,string costType)
         {
-            h = getDistance(this, 'H');
-            return g +h;
+            if(costType == "hamming")
+            {
+                node.h = ComputeHamming(node);
+            }
+            else
+            {
+                node.h = computeManhattan(node);
+            }
+            node.cost = node.level + node.h;
+            return node.cost;
+
         }
-
-        public bool isFinalState()
+        public bool isEqual(Node node)
         {
-            int count = 1;
-            int[,] finalState = new int[size, size];
-            for (int i = 0; i < size; i++)
-                for (int j = 0; j < size; j++)
-                    finalState[i, j] = count++;
-
-            finalState[size - 1, size - 1] = 0;
-
-            /*
-             * 1 2 3
-             * 4 5 6
-             * 7 8 0
-             */
-
-            return isEqual(finalState);
-        }
-
-        public bool isEqual(int[,] arr)
-        {
-            for (int i = 0; i < size; i++)
-                for (int j = 0; j < size; j++)
-                    if (arr[i, j] != grid[i, j])
-                        return false;
+            if(node == null)
+                return false;
+            if (blankRow != node.blankRow || blankCol != node.blankCol)
+                return false;
             return true;
         }
-
         public Node moveUp()
         {
             // Copy the parent's data (grid, g, x, y) and add parent
             Node child = new Node(this);
-
-            child.grid[x, y] = grid[x - 1, y];
-            child.grid[x - 1, y] = 0;
-            child.x = x - 1;
-            child.y = y;
-            h = getDistance(this, 'H');
-            child.f = child.h + child.g;
+            
+            child.grid[blankRow, blankCol] = grid[blankRow - 1, blankCol];
+            child.grid[blankRow - 1, blankCol] = 0;
+            child.blankRow = blankRow - 1;
+            child.blankCol = blankCol;
             return child;
         }
 
@@ -105,12 +86,11 @@ namespace N_Puzzle
             // Copy the parent's data
             Node child = new Node(this);
 
-            child.grid[x, y] = grid[x + 1, y];
-            child.grid[x + 1, y] = 0;
-            child.x = x + 1;
-            child.y = y;
-            h = getDistance(this, 'H');
-            child.f = child.h + child.g;
+         
+            child.grid[blankRow, blankCol] = grid[blankRow + 1, blankCol];
+            child.grid[blankRow + 1, blankCol] = 0;
+            child.blankRow = blankRow + 1;
+            child.blankCol = blankCol;
             return child;
         }
 
@@ -119,12 +99,10 @@ namespace N_Puzzle
             // Copy the parent's data
             Node child = new Node(this);
 
-            child.grid[x, y] = grid[x, y + 1];
-            child.grid[x, y + 1] = 0;
-            child.x = x;
-            child.y = y + 1;
-            h = getDistance(this, 'H');
-            child.f = child.h + child.g;
+            child.grid[blankRow, blankCol] = grid[blankRow, blankCol + 1];
+            child.grid[blankRow, blankCol + 1] = 0;
+            child.blankRow = blankRow;
+            child.blankCol = blankCol + 1;
             return child;
         }
 
@@ -132,83 +110,62 @@ namespace N_Puzzle
         {
             // Copy the parent's data
             Node child = new Node(this);
-
-            child.grid[x, y] = grid[x, y - 1];
-            child.grid[x, y - 1] = 0;
-            child.x = x;
-            child.y = y - 1;
-            h = getDistance(this, 'H');
-            child.f = child.h + child.g;
+           
+            child.grid[blankRow, blankCol] = grid[blankRow, blankCol - 1];
+            child.grid[blankRow, blankCol - 1] = 0;
+            child.blankRow = blankRow;
+            child.blankCol = blankCol - 1;
             return child;
         }
 
-        public int getDistance(Node node, char choice)
+        public int ComputeHamming(Node node)
         {
-            if (choice == 'M' || choice == 'm')
+            int hamming = 0,count = 1;
+            for (int row = 0; row < size; row++)
             {
-                int c = 1;
-                int[,] finalState = new int[size, size];
-                for (int i = 0; i < size; i++)
-                    for (int j = 0; j < size; j++)
-                        finalState[i, j] = c++;
-
-                finalState[size - 1, size - 1] = 0;
-
-                int m = 0, newX = 0, newY = 0;
-                for (int row = 0; row < size; row++)
+                for (int col = 0; col < size; col++)
                 {
-                    for (int col = 0; col < size; col++)
+                    if (node.grid[row, col] != 0)
                     {
-                        // Now current num is node.grid[row,col]
-                        // Search for its equivalent in finalState through ii, jj
-
-                        for (int ii = 0; ii < size; ii++)
-                        {
-                            for (int jj = 0; jj < size; jj++)
-                            {
-                                if (node.grid[row, col] == finalState[ii, jj])
-                                {
-                                    newX = ii;
-                                    newY = jj;
-                                }
-                            }
-                        }
-                        m += Math.Abs(newX - row) + Math.Abs(newY - col);
+                        if (node.grid[row, col] != count)
+                            hamming++;
                     }
+                    count++;
+                    count %= size * size;
                 }
-                return m;
-            } else
-            {
-                int h = 0, count = 1;
-                for (int row = 0; row < size; row++)
-                {
-                    for (int col = 0; col < size; col++)
-                    {
-                        if (node.grid[row, col] != 0)
-                        {
-                            if (node.grid[row, col] != count)
-                                h++;
-                        }
-                        count++;
-                        count %= size * size;
-                    }
-                }
-                return h;
             }
+            return hamming;
         }
 
+        public int computeManhattan(Node node)
+        {
+            int manhattan = 0, expectedRow = 0, exepectedCol = 0;
+            for (int row = 0; row < size; row++)
+            {
+                for (int col = 0; col < size; col++)
+                {
+                    if (node.grid[row, col] != 0 ) 
+                    {
+                        exepectedCol = (node.grid[row, col] - 1) % size;
+                        expectedRow = (node.grid[row, col] - 1) / size;
+                        manhattan = manhattan + Math.Abs(row - expectedRow) + Math.Abs(col - exepectedCol);
+                    }
 
+                }
+             
+            }
+            return manhattan;
+        }
         public void printState()
         {
-            //Console.WriteLine(getHamming(this));
-            for (int i = 0; i < size; i++)
+            for (int row = 0; row < size; row++)
             {
-                for (int j = 0; j < size; j++)
+                for (int col = 0; col < size; col++)
                 {
                     // For beautifying reasons
-                    String num = "0" + grid[i, j].ToString();
+                    String num = "0" + grid[row, col].ToString();
                     Console.Write(num.Substring(num.Length - 2));
-                    if (j < size - 1) Console.Write(" | ");
+                    if (col < size - 1) Console.Write(" | ");
                 }
                 Console.Write('\n');
             }
@@ -216,33 +173,50 @@ namespace N_Puzzle
 
         public Boolean isSolvable()
         {
-            int[] tempArr = new int[size * size];
-            int k = 0, ans=0;
+            int[] tempGrid = new int[size * size];
+            int cells = 0, ans=0;
 
             // Convert to 1D array
-            for (int i = 0; i < size; i++)
+            for (int row = 0; row < size; row++)
             {
-                for (int j = 0; j < size; j++)
+                for (int col = 0; col < size; col++)
                 {
-                    tempArr[k++] = grid[i, j];
+                    tempGrid[cells] = grid[row, col];
+                    cells++;
                 }
             }
 
-            for (int i = 0; i < size*size; i++)
+            for (int cell = 0; cell < size*size; cell++)
             {
-                if (tempArr[i] == 0) continue;
-                for (int j = i+1; j < size*size; j++)
+                if (tempGrid[cell] == 0) continue;
+                for (int j = cell+1; j < size*size; j++)
                 {
-                    if (tempArr[j] != 0 && tempArr[i] < tempArr[j]) ans++;
+                    if (tempGrid[j] != 0 && tempGrid[cell] < tempGrid[j]) ans++;
                 }
             }
 
             if (size%2 == 1 && ans % 2 == 0) return true;
 
             if (size %2 == 0)
-                if (x % 2 == ans % 2) return true;
+                if (blankRow % 2 == ans % 2) return true;
 
             return false;
         }
+        public int gridToHash()
+        {
+            int hash = 193;
+            for (int row = 0; row <size; row++)
+            {
+                for(int col = 0;col<size;col++)
+                {
+                    hash = hash * 59 + (grid[row, col]);
+                
+                }
+            }
+
+
+            return hash;
+        }
+     
     }
 }
