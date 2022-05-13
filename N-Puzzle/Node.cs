@@ -49,25 +49,21 @@ namespace N_Puzzle
 
         public int computeCost(Node node,string costType)
         {
-            if(costType == "hamming")
+            if(costType == "hamming" || costType == "Hamming")
             {
                 node.h = ComputeHamming(node);
             }
-            else
+            else if(costType == "manhattan" || costType == "Manhattan")
             {
                 node.h = computeManhattan(node);
+            }
+            else
+            {
+                throw new InvalidOperationException("Wrong cost function.");
             }
             node.cost = node.level + node.h;
             return node.cost;
 
-        }
-        public bool isEqual(Node node)
-        {
-            if(node == null)
-                return false;
-            if (blankRow != node.blankRow || blankCol != node.blankCol)
-                return false;
-            return true;
         }
         public Node moveUp()
         {

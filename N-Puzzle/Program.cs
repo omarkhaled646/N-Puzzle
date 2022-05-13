@@ -48,9 +48,9 @@ namespace N_Puzzle
                         Node parent = new Node(puzzle, size);
                         line = reader.ReadLine();
                         int expectedResult = int.Parse(line);
-                        Stopwatch sw = Stopwatch.StartNew();
+                        Stopwatch sw_hamming = Stopwatch.StartNew();
                         Node recievedHammingNode = aStar.aStar(parent, "hamming");
-                        sw.Stop();
+                        sw_hamming.Stop();
                         if (recievedHammingNode.level != expectedResult)
                         {
                             Console.WriteLine("Wrong answer for hamming at test case " + (Case + 1));
@@ -68,16 +68,16 @@ namespace N_Puzzle
                        
                         aStar.printSteps();
                         
-                        Console.WriteLine("time for hamming at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds + " ms");
-                        sw.Start();
+                        Console.WriteLine("time for hamming at case " + (Case + 1) + " is " + sw_hamming.ElapsedMilliseconds + " ms");
+                        Stopwatch sw_manhattan = Stopwatch.StartNew();
                         Node recievedManhattanNode = aStar.aStar(parent, "manhattan");
-                        sw.Stop();
+                        sw_manhattan.Stop();
                         if (recievedManhattanNode.level != expectedResult)
                         {
                             Console.WriteLine("Wrong answer for mannhattan at test case " + (Case + 1));
                             return;
                         }
-                        Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds + " ms");
+                        Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + sw_manhattan.ElapsedMilliseconds + " ms");
                         Console.WriteLine("-----------------------------------------------------------------------------");
                     }
                     Console.WriteLine("Congratulation your sample tests ran successfully.");
@@ -108,9 +108,9 @@ namespace N_Puzzle
                         Node parent = new Node(puzzle, size);
                         line = reader.ReadLine();
                         int expectedResult = int.Parse(line);
-                        Stopwatch sw = Stopwatch.StartNew();
+                        Stopwatch sw_hamming = Stopwatch.StartNew();
                         Node recievedHammingNode = aStar.aStar(parent, "hamming");
-                        sw.Stop();
+                        sw_hamming.Stop();
                         if (recievedHammingNode.level != expectedResult)
                         {
                             Console.WriteLine("Wrong answer for hamming at test case " + (Case + 1));
@@ -128,16 +128,16 @@ namespace N_Puzzle
 
                         aStar.printSteps();
 
-                        Console.WriteLine("time for hamming at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds +" ms");
-                        sw.Start();
+                        Console.WriteLine("time for hamming at case " + (Case + 1) + " is " + sw_hamming.ElapsedMilliseconds +" ms");
+                        Stopwatch sw_manhattan = Stopwatch.StartNew();
                         Node recievedManhattanNode = aStar.aStar(parent, "manhattan");
-                        sw.Stop();
+                        sw_manhattan.Stop();
                         if (recievedManhattanNode.level != expectedResult)
                         {
                             Console.WriteLine("Wrong answer for mannhattan at test case " + (Case + 1));
                             return;
                         }
-                        Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds+ " ms");
+                        Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + sw_manhattan.ElapsedMilliseconds+ " ms");
                         Console.WriteLine("-----------------------------------------------------------------------------");
                     }
                     Console.WriteLine("Congratulation your complete tests for both ran successfully.");
