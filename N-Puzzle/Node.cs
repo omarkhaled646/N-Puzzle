@@ -59,7 +59,7 @@ namespace N_Puzzle
             }
             else
             {
-                throw new InvalidOperationException("Wrong cost function.");
+                throw new Exception("Wrong cost function.");
             }
             node.cost = node.level + node.h;
             return node.cost;
