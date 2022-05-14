@@ -140,7 +140,7 @@ namespace N_Puzzle
             {
                 for (int col = 0; col < size; col++)
                 {
-                    if (node.grid[row, col] != 0 ) 
+                    if (node.grid[row, col] != 0) 
                     {
                         exepectedCol = (node.grid[row, col] - 1) % size;
                         expectedRow = (node.grid[row, col] - 1) / size;

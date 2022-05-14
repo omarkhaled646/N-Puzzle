@@ -16,10 +16,29 @@ namespace N_Puzzle
             int cases;
             StreamReader reader;
             string line;
+            string costType;
             TextReader origConsole = Console.In;
+            Console.WriteLine("Enter [1] for Manhattan or [2] for Hamming.");
+            char choiceOfCost = Console.ReadLine()[0];
+            if(choiceOfCost == '1')
+            {
+                costType = "manhattan";
+            }
+            else if(choiceOfCost == '2')
+            {
+                costType = "hamming";
+            }
+            else
+            {
+                throw new Exception("Invalid choice");
+            }
             Console.WriteLine("N-Puzzle:\n[1] Sample test cases\n[2] Complete testing for both\n[3] complete testing for Manhattan only\n");
             Console.Write("\nEnter your choice [1-2-3]: ");
             char choice = (char)Console.ReadLine()[0];
+            if(choice == '3' && choiceOfCost == '2')
+            {
+                throw new Exception("These tests are for Manhattan only.");
+            }
 
             switch (choice)
             {
@@ -48,38 +67,31 @@ namespace N_Puzzle
                         Node parent = new Node(puzzle, size);
                         line = reader.ReadLine();
                         int expectedResult = int.Parse(line);
-                        Stopwatch sw_hamming = Stopwatch.StartNew();
-                        Node recievedHammingNode = aStar.aStar(parent, "hamming");
-                        sw_hamming.Stop();
-                        if (recievedHammingNode.level != expectedResult)
+                        Stopwatch sw = Stopwatch.StartNew();
+                        Node recievedNode = aStar.aStar(parent,costType);
+                        sw.Stop();
+                        if (recievedNode.level != expectedResult)
                         {
                             Console.WriteLine("Wrong answer for hamming at test case " + (Case + 1));
                             return;
                         }
-                        if(recievedHammingNode.level == -1)
+                        if(recievedNode.level == -1)
                         {
                             Console.WriteLine("Not solvable");
                         }
                         else
                         {
                             Console.WriteLine("Solvable");
-                            Console.WriteLine("Number of steps = " + recievedHammingNode.level);
+                            aStar.printSteps();
+                            Console.WriteLine("Number of steps = " + recievedNode.level);
                         }
                        
-                        aStar.printSteps();
                         
-                        Console.WriteLine("time for hamming at case " + (Case + 1) + " is " + sw_hamming.ElapsedMilliseconds + " ms");
-                        Stopwatch sw_manhattan = Stopwatch.StartNew();
-                        Node recievedManhattanNode = aStar.aStar(parent, "manhattan");
-                        sw_manhattan.Stop();
-                        if (recievedManhattanNode.level != expectedResult)
-                        {
-                            Console.WriteLine("Wrong answer for mannhattan at test case " + (Case + 1));
-                            return;
-                        }
-                        Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + sw_manhattan.ElapsedMilliseconds + " ms");
+                        Console.WriteLine("time for " + costType + " at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds + " ms");
+                        Console.WriteLine("time for " + costType + " at case " + (Case + 1) + " is " + (float)sw.ElapsedMilliseconds / 1000 + " s");
                         Console.WriteLine("-----------------------------------------------------------------------------");
                     }
+
                     Console.WriteLine("Congratulation your sample tests ran successfully.");
                     break;
                 #endregion
@@ -108,38 +120,30 @@ namespace N_Puzzle
                         Node parent = new Node(puzzle, size);
                         line = reader.ReadLine();
                         int expectedResult = int.Parse(line);
-                        Stopwatch sw_hamming = Stopwatch.StartNew();
-                        Node recievedHammingNode = aStar.aStar(parent, "hamming");
-                        sw_hamming.Stop();
-                        if (recievedHammingNode.level != expectedResult)
+                        Stopwatch sw = Stopwatch.StartNew();
+                        Node recievedNode = aStar.aStar(parent, costType);
+                        sw.Stop();
+                        if (recievedNode.level != expectedResult)
                         {
                             Console.WriteLine("Wrong answer for hamming at test case " + (Case + 1));
                             return;
                         }
-                        if (recievedHammingNode.level == -1)
+                        if (recievedNode.level == -1)
                         {
                             Console.WriteLine("Not solvable");
                         }
                         else
                         {
                             Console.WriteLine("Solvable");
-                            Console.WriteLine("Number of steps = " + recievedHammingNode.level);
+                            aStar.printSteps();
+                            Console.WriteLine("Number of steps = " + recievedNode.level);
                         }
 
-                        aStar.printSteps();
-
-                        Console.WriteLine("time for hamming at case " + (Case + 1) + " is " + sw_hamming.ElapsedMilliseconds +" ms");
-                        Stopwatch sw_manhattan = Stopwatch.StartNew();
-                        Node recievedManhattanNode = aStar.aStar(parent, "manhattan");
-                        sw_manhattan.Stop();
-                        if (recievedManhattanNode.level != expectedResult)
-                        {
-                            Console.WriteLine("Wrong answer for mannhattan at test case " + (Case + 1));
-                            return;
-                        }
-                        Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + sw_manhattan.ElapsedMilliseconds+ " ms");
+                        Console.WriteLine("time for "+ costType + " at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds +" ms");
+                        Console.WriteLine("time for " + costType + " at case " + (Case + 1) + " is " + (float)sw.ElapsedMilliseconds /1000+ " s");
                         Console.WriteLine("-----------------------------------------------------------------------------");
                     }
+
                     Console.WriteLine("Congratulation your complete tests for both ran successfully.");
                     break;
                 #endregion
@@ -168,12 +172,12 @@ namespace N_Puzzle
                         line = reader.ReadLine();
                         int expectedResult = int.Parse(line);
                         Stopwatch sw = Stopwatch.StartNew();
-                        Node recievedManhattanNode = aStar.aStar(parent, "manhattan");
+                        Node recievedManhattanNode = aStar.aStar(parent, costType);
                         sw.Stop();
                         if (recievedManhattanNode.level != expectedResult)
                         {
                             Console.WriteLine("Wrong answer for manhattan at test case " + (Case + 1));
-                            //return;
+                            return;
                         }
                         if (recievedManhattanNode.level == -1)
                         {
@@ -182,14 +186,15 @@ namespace N_Puzzle
                         else
                         {
                             Console.WriteLine("Solvable");
+                            aStar.printSteps();
                             Console.WriteLine("Number of steps = " + recievedManhattanNode.level);
                         }
                       
-                            aStar.printSteps();
-                        
                         Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds + " ms");
+                        Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + (float)sw.ElapsedMilliseconds /1000 + " s");
                         Console.WriteLine("-----------------------------------------------------------------------------");
                     }
+
                     Console.WriteLine("Congratulation your complete tests for Manhattan ran successfully.");
                     break;
                 #endregion

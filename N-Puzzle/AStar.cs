@@ -43,7 +43,7 @@ namespace N_Puzzle
                 //current.printState();
                 // Base case (Finish state)
              
-                if (current.h == 0)
+                   if (current.h == 0)
                 {
                     getSteps(current);
                     return current;
@@ -56,10 +56,9 @@ namespace N_Puzzle
                 getChildern(current,costType);
                 current = nodes.dequeue();
 
-
             }
           
-            // If some error happened, return 0 or -1 or anything else (number of steps)
+            // If some error happened, return null or anything else (number of steps)
             return null;
         }
         public void getChildern(Node node,string costType)
