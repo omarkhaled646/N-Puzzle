@@ -12,6 +12,7 @@ namespace N_Puzzle
         public HashSet<int> finished;
         public  priorityqueue nodes;
         public Node current, child;
+
         public Node aStar(Node parent,string costType)
         {
             finalAnswer = new Stack<Node>();
@@ -27,23 +28,25 @@ namespace N_Puzzle
            parent.cost = parent.computeCost(parent,costType);
             if (parent.h == 0)
             {
+
                 getSteps(parent);
                 return parent;
             }
-          
 
+          
             // Let's go through all four options
             getChildern(parent, costType);
             // Now we are done with the parent
-            finished.Add(parent.gridToHash());
+            finished.Add(parent.hashCode());
             current = nodes.dequeue();
+
             while (nodes.Count()!=0)
             {
 
                 //current.printState();
                 // Base case (Finish state)
-             
-                   if (current.h == 0)
+              
+                if (current.h == 0)
                 {
                     getSteps(current);
                     return current;
@@ -52,9 +55,10 @@ namespace N_Puzzle
              
                 
                 // Repeat the four combinations again (beware of the states in finished)
-                finished.Add(current.gridToHash());
+                finished.Add(current.hashCode());
                 getChildern(current,costType);
                 current = nodes.dequeue();
+
 
             }
           
@@ -66,37 +70,41 @@ namespace N_Puzzle
                 if (node.blankRow + 1 <= Node.size - 1)
                 {
                     child = node.moveDown();
-                    if (!finished.Contains(child.gridToHash()))
+                    if (!finished.Contains(child.hashCode()))
                     {
                         child.cost = child.computeCost(child, costType);
                         nodes.enqueue(child);
+
                     }
             }
                 if (node.blankRow - 1 >= 0)
                 {
                     child = node.moveUp();
-                    if (!finished.Contains(child.gridToHash()))
+                    if (!finished.Contains(child.hashCode()))
                 {
                          child.cost = child.computeCost(child, costType);
                          nodes.enqueue(child);
+ 
                 }
             }
                 if (node.blankCol + 1 <= Node.size - 1)
                 {
                     child = node.moveRight();
-                    if (!finished.Contains(child.gridToHash()))
+                    if (!finished.Contains(child.hashCode()))
                 {
                         child.cost = child.computeCost(child, costType);
                         nodes.enqueue(child);
+
                 }
                 }
                 if (node.blankCol - 1 >= 0)
                 {
                     child = node.moveLeft();
-                    if (!finished.Contains(child.gridToHash()))
+                    if (!finished.Contains(child.hashCode()))
                 {
                         child.cost = child.computeCost(child, costType);
                         nodes.enqueue(child);
+
                 }
                 }
            

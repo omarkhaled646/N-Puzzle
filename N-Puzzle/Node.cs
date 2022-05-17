@@ -198,15 +198,15 @@ namespace N_Puzzle
 
             return false;
         }
-        public int gridToHash()
+        public int hashCode()
         {
             int hash = 193;
-            for (int row = 0; row <size; row++)
+            for (int row = 0; row < size; row++)
             {
-                for(int col = 0;col<size;col++)
+                for (int col = 0; col < size; col++)
                 {
                     hash = hash * 59 + (grid[row, col]);
-                
+
                 }
             }
 
