@@ -14,8 +14,8 @@ namespace N_Puzzle
         {
             parent = null;
             int count = 1;
-            goalState = new int[size,size];
-            for (int row = 0; row < size; row++) 
+            goalState = new int[size, size];
+            for (int row = 0; row < size; row++)
             {
                 for (int col = 0; col < size; col++)
                 {
@@ -28,8 +28,7 @@ namespace N_Puzzle
             goalState[size - 1, size - 1] = 0;
         }
 
-
-        public NodeBfs(NodeBfs parent) : base(parent) 
+        public NodeBfs(NodeBfs parent) : base(parent)
         {
             this.parent = parent;
         }
@@ -50,7 +49,6 @@ namespace N_Puzzle
         {
             // Copy the parent's data
             NodeBfs child = new NodeBfs(this);
-
 
             child.grid[blankRow, blankCol] = grid[blankRow + 1, blankCol];
             child.grid[blankRow + 1, blankCol] = 0;
@@ -90,12 +88,10 @@ namespace N_Puzzle
             {
                 for (int col = 0; col < size; col++)
                 {
-                    
-                        if (grid[row, col] != goalState[row,col])
-                        {
-                            return false;
-                        }
-                    
+                    if (grid[row, col] != goalState[row, col])
+                    {
+                        return false;
+                    }
                     count++;
                 }
             }

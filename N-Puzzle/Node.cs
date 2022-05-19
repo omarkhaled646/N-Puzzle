@@ -8,10 +8,10 @@ namespace N_Puzzle
 {
     abstract class Node
     {
-        public int[,] grid;                  
-        public int level;            
-        public int blankRow;        
-        public int blankCol;          
+        public int[,] grid;
+        public int level;
+        public int blankRow;
+        public int blankCol;
         public static int size;
 
 
@@ -57,6 +57,7 @@ namespace N_Puzzle
                 }
             }
 
+            // Calculate inversions
             for (int cell = 0; cell < size * size; cell++)
             {
                 if (tempGrid[cell] == 0) continue;
@@ -66,6 +67,7 @@ namespace N_Puzzle
                 }
             }
 
+            // Rules to check solvability
             if (size % 2 == 1 && ans % 2 == 0) return true;
 
             if (size % 2 == 0)
@@ -75,6 +77,7 @@ namespace N_Puzzle
         }
 
    
+        // Used to hash the array for comparison
         public uint hashCode()
         {
             uint hash = 193;

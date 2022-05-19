@@ -9,9 +9,9 @@ namespace N_Puzzle
 {
     class NodeAstar : Node
     {      
-        public int h;                    
-        public int cost;       
-        public NodeAstar parent;         
+        public int h;                    // Heuristic
+        public int cost;                 // Cost so far (level + heuristic)
+        public NodeAstar parent;
     
 
         public NodeAstar(int[,] arr, int size): base(arr, size)
@@ -26,11 +26,11 @@ namespace N_Puzzle
 
         public int computeCost(NodeAstar node,string costType)
         {
-            if(costType == "hamming" || costType == "Hamming")
+            if(string.Equals(costType,"Hamming", StringComparison.OrdinalIgnoreCase))
             {
                 node.h = ComputeHamming(node);
             }
-            else if(costType == "manhattan" || costType == "Manhattan")
+            else if(string.Equals(costType, "Manhattan", StringComparison.OrdinalIgnoreCase))
             {
                 node.h = computeManhattan(node);
             }
@@ -38,6 +38,8 @@ namespace N_Puzzle
             {
                 throw new Exception("Wrong cost function.");
             }
+
+            // Update new cost
             node.cost = node.level + node.h;
             return node.cost;
 
@@ -58,7 +60,6 @@ namespace N_Puzzle
         {
             // Copy the parent's data
             NodeAstar child = new NodeAstar(this);
-
          
             child.grid[blankRow, blankCol] = grid[blankRow + 1, blankCol];
             child.grid[blankRow + 1, blankCol] = 0;
@@ -104,7 +105,7 @@ namespace N_Puzzle
                             hamming++;
                     }
                     count++;
-                    count %= size * size;
+                    count %= size * size;       // For last cell = 0
                 }
             }
             return hamming;
@@ -112,7 +113,7 @@ namespace N_Puzzle
 
         public int computeManhattan(NodeAstar node)
         {
-            int manhattan = 0, expectedRow = 0, exepectedCol = 0;
+            int manhattan = 0, expectedRow, exepectedCol;
             for (int row = 0; row < size; row++)
             {
                 for (int col = 0; col < size; col++)
@@ -135,16 +136,13 @@ namespace N_Puzzle
             {
                 for (int col = 0; col < size; col++)
                 {
-                    // For beautifying reasons
-                    String num = "0" + grid[row, col].ToString();
+                    // For beautifying reasons 
+                    string num = "0" + grid[row, col].ToString();
                     Console.Write(num.Substring(num.Length - 2));
                     if (col < size - 1) Console.Write(" | ");
                 }
                 Console.Write('\n');
             }
         }
-
-       
-     
     }
 }

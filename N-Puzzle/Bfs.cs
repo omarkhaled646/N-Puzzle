@@ -28,23 +28,19 @@ namespace N_Puzzle
                 return parent;
             }
 
-
             getChildern(parent);
             finished.Add(parent.hashCode());
 
-
             while (nodes.Count() != 0)
             {
-
                 current = nodes.Dequeue();
                 if (current.isFinalState())
                 {
                     return current;
                 }
-                
+
                 getChildern(current);
                 finished.Add(current.hashCode());
-             
             }
 
             // If some error happened, return null or anything else (number of steps)
@@ -84,8 +80,6 @@ namespace N_Puzzle
                     nodes.Enqueue(child);
                 }
             }
-
         }
-
     }
 }

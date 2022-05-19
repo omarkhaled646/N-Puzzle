@@ -22,7 +22,7 @@ namespace N_Puzzle
 
             Console.WriteLine("Enter [1] for Astar or [2] for Bfs.");
             algorithmChoice = Console.ReadLine()[0];
-            if(algorithmChoice != '1' && algorithmChoice != '2')
+            if (algorithmChoice != '1' && algorithmChoice != '2')
             {
                 throw new Exception("Invalid choice");
             }
@@ -46,11 +46,11 @@ namespace N_Puzzle
             Console.WriteLine("N-Puzzle:\n[1] Sample test cases\n[2] Complete testing for both\n[3] complete testing for Manhattan only\n");
             Console.Write("\nEnter your choice [1-2-3]: ");
             char choice = Console.ReadLine()[0];
-            if(choice == '3' && choiceOfCost == '2')
+            if (choice == '3' && choiceOfCost == '2')
             {
                 throw new Exception("These tests are for Manhattan only.");
             }
-            
+
             switch (choice)
             {
                 case '1':
@@ -88,7 +88,7 @@ namespace N_Puzzle
                             parent = new NodeAstar(puzzle, size);
                             recievedNode = aStar.aStar((NodeAstar)parent, costType);
                         }
-                        else 
+                        else
                         {
                             bfs = new Bfs();
                             parent = new NodeBfs(puzzle, size);
@@ -100,7 +100,7 @@ namespace N_Puzzle
                             Console.WriteLine("Wrong answer for hamming at test case " + (Case + 1));
                             return;
                         }
-                        if(recievedNode.level == -1)
+                        if (recievedNode.level == -1)
                         {
                             Console.WriteLine("Not solvable");
                         }
@@ -114,8 +114,8 @@ namespace N_Puzzle
                             }
                             Console.WriteLine("Number of steps = " + recievedNode.level);
                         }
-                       
-                        
+
+
                         Console.WriteLine("time for " + costType + " at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds + " ms");
                         Console.WriteLine("time for " + costType + " at case " + (Case + 1) + " is " + (float)sw.ElapsedMilliseconds / 1000 + " s");
                         Console.WriteLine("-----------------------------------------------------------------------------");
@@ -181,8 +181,8 @@ namespace N_Puzzle
                             Console.WriteLine("Number of steps = " + recievedNode.level);
                         }
 
-                        Console.WriteLine("time for "+ costType + " at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds +" ms");
-                        Console.WriteLine("time for " + costType + " at case " + (Case + 1) + " is " + (float)sw.ElapsedMilliseconds /1000+ " s");
+                        Console.WriteLine("time for " + costType + " at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds + " ms");
+                        Console.WriteLine("time for " + costType + " at case " + (Case + 1) + " is " + (float)sw.ElapsedMilliseconds / 1000 + " s");
                         Console.WriteLine("-----------------------------------------------------------------------------");
                     }
 
@@ -231,16 +231,16 @@ namespace N_Puzzle
                             aStar.printSteps();
                             Console.WriteLine("Number of steps = " + recievedManhattanNode.level);
                         }
-                      
+
                         Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + sw.ElapsedMilliseconds + " ms");
-                        Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + (float)sw.ElapsedMilliseconds /1000 + " s");
+                        Console.WriteLine("time for manhattan at case " + (Case + 1) + " is " + (float)sw.ElapsedMilliseconds / 1000 + " s");
                         Console.WriteLine("-----------------------------------------------------------------------------");
                     }
 
                     Console.WriteLine("Congratulation your complete tests for Manhattan ran successfully.");
                     break;
                 #endregion
-              
+
                 default:
                     #region
                     Console.WriteLine("Invalid choice");
