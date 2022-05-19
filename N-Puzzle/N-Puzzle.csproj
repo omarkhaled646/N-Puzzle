@@ -47,7 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AStar.cs" />
+    <Compile Include="Bfs.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="NodeAstar.cs" />
+    <Compile Include="NodeBfs.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

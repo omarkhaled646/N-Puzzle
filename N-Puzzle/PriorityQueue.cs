@@ -8,12 +8,12 @@ namespace priorityQueue
 {
     class priorityqueue
     {
-        Node[] nodes;
+        NodeAstar[] nodes;
         int size = 0;
 
         public priorityqueue()
         {
-            nodes = new Node[100000000];
+            nodes = new NodeAstar[100000000];
         }
 
         public int Count()
@@ -21,14 +21,14 @@ namespace priorityQueue
             return size;
         }
 
-        public Node extractMin()
+        public NodeAstar extractMin()
         {
             if (size == 0) 
             {
                 throw new InvalidOperationException("There is no elements in the queue.");
             }
 
-            Node minNode = nodes[1];
+            NodeAstar minNode = nodes[1];
             nodes[1] = nodes[size];
             size -= 1;
             minHeapify(1, size);
@@ -61,31 +61,31 @@ namespace priorityQueue
                 minHeapify(minNodeIndex, size);
             }
         }
-        public void swap(ref Node firstNode , ref Node secondNode)
+        public void swap(ref NodeAstar firstNode , ref NodeAstar secondNode)
         {
-            Node tempNode = firstNode;
+            NodeAstar tempNode = firstNode;
             firstNode = secondNode;
             secondNode = tempNode;
         }
 
-        public Node dequeue()
+        public NodeAstar dequeue()
         {
             return extractMin();
         }
 
-        public void enqueue(Node node)
+        public void enqueue(NodeAstar node)
         {
             insert(node);
         }
 
-        public void insert(Node node)
+        public void insert(NodeAstar node)
         {
             size += 1;
             nodes[size] = null;
             increaseKey(node, size);
         }
 
-        public void increaseKey(Node node , int size)
+        public void increaseKey(NodeAstar node , int size)
         {
             nodes[size] = node;
             while (size > 1 && nodes[size / 2].cost >= nodes[size].cost)

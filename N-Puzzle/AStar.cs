@@ -8,15 +8,15 @@ namespace N_Puzzle
 {
     class AStar
     {
-        public Stack<Node> finalAnswer;
-        public HashSet<int> finished;
+        public Stack<NodeAstar> finalAnswer;
+        public HashSet<uint> finished;
         public  priorityqueue nodes;
-        public Node current, child;
+        public NodeAstar current, child;
 
-        public Node aStar(Node parent,string costType)
+        public NodeAstar aStar(NodeAstar parent,string costType)
         {
-            finalAnswer = new Stack<Node>();
-            finished = new HashSet<int>(); 
+            finalAnswer = new Stack<NodeAstar>();
+            finished = new HashSet<uint>(); 
             nodes = new priorityqueue();
      
             if (!parent.isSolvable())
@@ -65,7 +65,7 @@ namespace N_Puzzle
             // If some error happened, return null or anything else (number of steps)
             return null;
         }
-        public void getChildern(Node node,string costType)
+        public void getChildern(NodeAstar node,string costType)
         { 
                 if (node.blankRow + 1 <= Node.size - 1)
                 {
@@ -111,7 +111,7 @@ namespace N_Puzzle
         }
 
         
-        public void getSteps(Node node)
+        public void getSteps(NodeAstar node)
         {
            
             while(node.parent!=null)

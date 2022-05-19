@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
-using Priority_Queue;
 
 namespace N_Puzzle
 {
@@ -14,32 +13,44 @@ namespace N_Puzzle
         {
             FileStream testsFile;
             int cases;
+            char algorithmChoice;
             StreamReader reader;
             string line;
-            string costType;
+            string costType = " ";
+            char choiceOfCost = ' ';
             TextReader origConsole = Console.In;
-            Console.WriteLine("Enter [1] for Manhattan or [2] for Hamming.");
-            char choiceOfCost = Console.ReadLine()[0];
-            if(choiceOfCost == '1')
-            {
-                costType = "manhattan";
-            }
-            else if(choiceOfCost == '2')
-            {
-                costType = "hamming";
-            }
-            else
+
+            Console.WriteLine("Enter [1] for Astar or [2] for Bfs.");
+            algorithmChoice = Console.ReadLine()[0];
+            if(algorithmChoice != '1' && algorithmChoice != '2')
             {
                 throw new Exception("Invalid choice");
             }
+            if (algorithmChoice == '1')
+            {
+                Console.WriteLine("Enter [1] for Manhattan or [2] for Hamming.");
+                choiceOfCost = Console.ReadLine()[0];
+                if (choiceOfCost == '1')
+                {
+                    costType = "manhattan";
+                }
+                else if (choiceOfCost == '2')
+                {
+                    costType = "hamming";
+                }
+                else
+                {
+                    throw new Exception("Invalid choice");
+                }
+            }
             Console.WriteLine("N-Puzzle:\n[1] Sample test cases\n[2] Complete testing for both\n[3] complete testing for Manhattan only\n");
             Console.Write("\nEnter your choice [1-2-3]: ");
-            char choice = (char)Console.ReadLine()[0];
+            char choice = Console.ReadLine()[0];
             if(choice == '3' && choiceOfCost == '2')
             {
                 throw new Exception("These tests are for Manhattan only.");
             }
-
+            
             switch (choice)
             {
                 case '1':
@@ -63,12 +74,26 @@ namespace N_Puzzle
                                 puzzle[row, col] = int.Parse(rowNumbers[col]);
                             }
                         }
-                        AStar aStar = new AStar();
-                        Node parent = new Node(puzzle, size);
+
+                        Node parent = null;
+                        Node recievedNode = null;
+                        AStar aStar = null;
+                        Bfs bfs = null;
                         line = reader.ReadLine();
                         int expectedResult = int.Parse(line);
                         Stopwatch sw = Stopwatch.StartNew();
-                        Node recievedNode = aStar.aStar(parent,costType);
+                        if (algorithmChoice == '1')
+                        {
+                            aStar = new AStar();
+                            parent = new NodeAstar(puzzle, size);
+                            recievedNode = aStar.aStar((NodeAstar)parent, costType);
+                        }
+                        else 
+                        {
+                            bfs = new Bfs();
+                            parent = new NodeBfs(puzzle, size);
+                            recievedNode = bfs.bfs((NodeBfs)parent);
+                        }
                         sw.Stop();
                         if (recievedNode.level != expectedResult)
                         {
@@ -82,7 +107,11 @@ namespace N_Puzzle
                         else
                         {
                             Console.WriteLine("Solvable");
-                            aStar.printSteps();
+
+                            if (algorithmChoice == '1')
+                            {
+                                aStar.printSteps();
+                            }
                             Console.WriteLine("Number of steps = " + recievedNode.level);
                         }
                        
@@ -116,12 +145,25 @@ namespace N_Puzzle
                                 puzzle[row, col] = int.Parse(rowNumbers[col]);
                             }
                         }
-                        AStar aStar = new AStar();
-                        Node parent = new Node(puzzle, size);
+                        Node parent = null;
+                        Node recievedNode = null;
+                        AStar aStar = null;
+                        Bfs bfs = null;
                         line = reader.ReadLine();
                         int expectedResult = int.Parse(line);
                         Stopwatch sw = Stopwatch.StartNew();
-                        Node recievedNode = aStar.aStar(parent, costType);
+                        if (algorithmChoice == '1')
+                        {
+                            aStar = new AStar();
+                            parent = new NodeAstar(puzzle, size);
+                            recievedNode = aStar.aStar((NodeAstar)parent, costType);
+                        }
+                        else
+                        {
+                            bfs = new Bfs();
+                            parent = new NodeBfs(puzzle, size);
+                            recievedNode = bfs.bfs((NodeBfs)parent);
+                        }
                         sw.Stop();
                         if (recievedNode.level != expectedResult)
                         {
@@ -168,11 +210,11 @@ namespace N_Puzzle
                             }
                         }
                         AStar aStar = new AStar();
-                        Node parent = new Node(puzzle, size);
+                        NodeAstar parent = new NodeAstar(puzzle, size);
                         line = reader.ReadLine();
                         int expectedResult = int.Parse(line);
                         Stopwatch sw = Stopwatch.StartNew();
-                        Node recievedManhattanNode = aStar.aStar(parent, costType);
+                        NodeAstar recievedManhattanNode = aStar.aStar(parent, costType);
                         sw.Stop();
                         if (recievedManhattanNode.level != expectedResult)
                         {
